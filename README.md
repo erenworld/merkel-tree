@@ -69,3 +69,7 @@ We are going to use sha256 to hash the concatenation of our hashes. So, we will 
 const merkleRoot = generateMerkleRoot(HASH_VALUE);
 console.log('\x1b[36m%s\x1b[0m', 'merkleRoot:', merkleRoot);
 ```
+
+# Resources
+- https://github.com/akbng/merkle-tree
+- https://github.com/bitcoin/bitcoin/blob/master/src/consensus/merkle.cpp

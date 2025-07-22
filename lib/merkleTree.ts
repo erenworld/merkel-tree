@@ -26,6 +26,7 @@ const HASH_VALUE: string[] = [
 
 const LEFT = 'left' as const;
 const RIGHT = 'right' as const;
+
 type LeafSide = typeof LEFT | typeof RIGHT;
 
 /** Hash function that returns hex string */
@@ -44,7 +45,7 @@ const sha256 = (data: string): string => {
  * @returns 'left' | 'right'
  */
 const getLeafSide = (hash: string, merkleTree: string[][]): LeafSide => {
-    const hashIndex = merkleTree[0].findIndex(h => h === hash);
+    const hashIndex = merkleTree[0].indexOf(hash);
     if (hashIndex === -1) {
         throw new Error(`Hash not found in leaf nodes`);
     }
@@ -128,11 +129,14 @@ console.log('merkleTree: ', merkleTree); // Last level, the root, the Merkle roo
 /**
  * @param {string} hash
  * @param {Array<string>} hashes
- * @returns {Array<node>} merkeProof
+ * @returns {Array<{hash: string, direction: LeafSide}>} merkleProof
  */
 function generateMerkleProof(hash: string, hashes: Array<string>) {
     if (!hash || !hashes || hashes.length === 0) {
         throw new Error('Invalid hash');
+    }
+    if (!hashes.includes(hash)) {
+        throw new Error(`Hash ${hash} not found in provided hashes`);
     }
     const tree = generateMerkleTree(hashes);
     const merkleProof = [
@@ -144,7 +148,7 @@ function generateMerkleProof(hash: string, hashes: Array<string>) {
     let hashIndex = tree[0].findIndex(h => h === hash);
     for (let level = 0; level < tree.length - 1; level++) {
         const isLeftChild = hashIndex % 2 === 0;
-        const siblingSide = isLeftChild ? LEFT : RIGHT;
+        const siblingSide = isLeftChild ? RIGHT : LEFT;
         const siblingIndex = isLeftChild ? hashIndex + 1 : hashIndex - 1;
         const siblingNode = {
             hash: tree[level][siblingIndex],
@@ -158,3 +162,33 @@ function generateMerkleProof(hash: string, hashes: Array<string>) {
 
 const generatedMerkleProof = generateMerkleProof(HASH_VALUE[4], HASH_VALUE);
 console.log('generatedMerkleProof: ', generatedMerkleProof);
+
+/**
+ * @param merkleProof 
+ * @returns la racine de Merkle calculée
+ */
+function getMerkleRoot(merkleProof: Array<{hash: string, direction: LeafSide}>): string {
+    if (!merkleProof || merkleProof.length === 0) {
+        throw new Error('Invalid merkle proof');
+    }
+    
+    let currentHash = merkleProof[0].hash;
+    
+    for (let i = 1; i < merkleProof.length; i++) {
+        const node = merkleProof[i];
+        
+        if (node.direction === RIGHT) {
+            currentHash = sha256(currentHash + node.hash);
+        } else {
+            currentHash = sha256(node.hash + currentHash);
+        }
+    }
+    
+    return currentHash;
+}
+
+const calculatedRoot = getMerkleRoot(generatedMerkleProof);
+const directRoot = generateMerkleRoot(HASH_VALUE);
+console.log('Root from proof:', calculatedRoot);
+console.log('Direct root:', directRoot);
+console.log('Match:', calculatedRoot === directRoot);
