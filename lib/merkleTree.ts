@@ -104,8 +104,8 @@ function generateMerkleTree(hashes: string[]): string[][] {
         return [];
     }  
     
-    const tree = [hashes];
-    const generate = (hashes, tree) => {
+    const tree: string[][] = [hashes];
+    const generate = (hashes: string[], tree: string[][]): string[] => {
         if (hashes.length === 1) return hashes;
 
         const evenHashes = ensureHashesEven(hashes);
