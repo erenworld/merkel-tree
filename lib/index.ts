@@ -48,3 +48,14 @@ const getLeafSide = (hash, merkleTree) => {
     return hashIndex % 2 === 0 ? LEFT : RIGHT;
 }
 
+/**
+ * If the hashes length is not event, copies the last hash and adds it to the
+ * end of the array.
+ * @param {Array<string>} hashes
+ */
+function ensureHashesEven(hashes) {
+    if (hashes.length % 2 === 0) {
+        return [...hashes]
+    }
+    return [...hashes, hashes[hashes.length - 1]];
+}
