@@ -54,8 +54,9 @@ const getLeafSide = (hash, merkleTree) => {
  * @param {Array<string>} hashes
  */
 function ensureHashesEven(hashes) {
-    if (hashes.length % 2 === 0) {
-        return [...hashes]
-    }
-    return [...hashes, hashes[hashes.length - 1]];
+    return hashes.length % 2 === 0
+        ? [...hashes]
+        : [...hashes, hashes[hashes.length - 1]];
 }
+
+
