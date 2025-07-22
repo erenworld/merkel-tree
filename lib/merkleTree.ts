@@ -70,7 +70,7 @@ function ensureHashesEven(hashes: string[]): string[] {
  * @param hashes array of leaf hashes (strings)
  * @returns Merkle root hash string
  */
-function generateMerkleRoot(hashes: string[]): string {
+export function generateMerkleRoot(hashes: string[]): string {
     if (!hashes || hashes.length === 0) {
         throw new Error('Missing arguments: hashes');
     }
@@ -100,7 +100,7 @@ function generateMerkleRoot(hashes: string[]): string {
  * @param {Array<string>} hashes
  * @returns {Array<Array<string>>} merkelTree
  */
-function generateMerkleTree(hashes: string[]): string[][] {
+export function generateMerkleTree(hashes: string[]): string[][] {
     if (!hashes || hashes.length === 0) {
         return [];
     }  
@@ -123,15 +123,12 @@ function generateMerkleTree(hashes: string[]): string[][] {
     return tree;
 }
 
-const merkleTree = generateMerkleTree(HASH_VALUE);
-console.log('merkleTree: ', merkleTree); // Last level, the root, the Merkle root.
-
 /**
  * @param {string} hash
  * @param {Array<string>} hashes
  * @returns {Array<{hash: string, direction: LeafSide}>} merkleProof
  */
-function generateMerkleProof(hash: string, hashes: Array<string>) {
+export function generateMerkleProof(hash: string, hashes: Array<string>) {
     if (!hash || !hashes || hashes.length === 0) {
         throw new Error('Invalid hash');
     }
@@ -160,14 +157,11 @@ function generateMerkleProof(hash: string, hashes: Array<string>) {
     return merkleProof;
 }
 
-const generatedMerkleProof = generateMerkleProof(HASH_VALUE[4], HASH_VALUE);
-console.log('generatedMerkleProof: ', generatedMerkleProof);
-
 /**
  * @param merkleProof 
  * @returns la racine de Merkle calculée
  */
-function getMerkleRoot(merkleProof: Array<{hash: string, direction: LeafSide}>): string {
+export function getMerkleRoot(merkleProof: Array<{hash: string, direction: LeafSide}>): string {
     if (!merkleProof || merkleProof.length === 0) {
         throw new Error('Invalid merkle proof');
     }
@@ -187,8 +181,12 @@ function getMerkleRoot(merkleProof: Array<{hash: string, direction: LeafSide}>):
     return currentHash;
 }
 
-const calculatedRoot = getMerkleRoot(generatedMerkleProof);
-const directRoot = generateMerkleRoot(HASH_VALUE);
-console.log('Root from proof:', calculatedRoot);
-console.log('Direct root:', directRoot);
-console.log('Match:', calculatedRoot === directRoot);
+// EXAMPLE
+// const leafHash = HASH_VALUE[0];
+// const generatedMerkleProof = generateMerkleProof(leafHash, HASH_VALUE);
+// const calculatedRoot = getMerkleRoot(generatedMerkleProof);
+// const directRoot = generateMerkleRoot(HASH_VALUE);
+
+// console.log('Root from proof:', calculatedRoot);
+// console.log('Direct root:', directRoot);
+// console.log('Match:', calculatedRoot === directRoot);
