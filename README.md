@@ -64,3 +64,8 @@ Bitcoin also uses a double sha256 hash, something like:
 
 ## Code 
 We are going to use sha256 to hash the concatenation of our hashes. So, we will have 64 character hashes.
+
+```js
+const merkleRoot = generateMerkleRoot(HASH_VALUE);
+console.log('\x1b[36m%s\x1b[0m', 'merkleRoot:', merkleRoot);
+```
