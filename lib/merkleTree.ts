@@ -123,4 +123,38 @@ function generateMerkleTree(hashes: string[]): string[][] {
 }
 
 const merkleTree = generateMerkleTree(HASH_VALUE);
-console.log('merkleTree: ', merkleTree);
+console.log('merkleTree: ', merkleTree); // Last level, the root, the Merkle root.
+
+/**
+ * @param {string} hash
+ * @param {Array<string>} hashes
+ * @returns {Array<node>} merkeProof
+ */
+function generateMerkleProof(hash: string, hashes: Array<string>) {
+    if (!hash || !hashes || hashes.length === 0) {
+        throw new Error('Invalid hash');
+    }
+    const tree = generateMerkleTree(hashes);
+    const merkleProof = [
+        {
+            hash,
+            direction: getLeafSide(hash, tree)
+        }
+    ];
+    let hashIndex = tree[0].findIndex(h => h === hash);
+    for (let level = 0; level < tree.length - 1; level++) {
+        const isLeftChild = hashIndex % 2 === 0;
+        const siblingSide = isLeftChild ? LEFT : RIGHT;
+        const siblingIndex = isLeftChild ? hashIndex + 1 : hashIndex - 1;
+        const siblingNode = {
+            hash: tree[level][siblingIndex],
+            direction: siblingSide
+        };
+        merkleProof.push(siblingNode);
+        hashIndex = Math.floor(hashIndex / 2);
+    }
+    return merkleProof;
+}
+
+const generatedMerkleProof = generateMerkleProof(HASH_VALUE[4], HASH_VALUE);
+console.log('generatedMerkleProof: ', generatedMerkleProof);
