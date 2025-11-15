@@ -71,5 +71,4 @@ console.log('\x1b[36m%s\x1b[0m', 'merkleRoot:', merkleRoot);
 ```
 
 # Resources
-- https://github.com/akbng/merkle-tree
 - https://github.com/bitcoin/bitcoin/blob/master/src/consensus/merkle.cpp
